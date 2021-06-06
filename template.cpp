@@ -1,3 +1,4 @@
+// THIS TEMPLATE IS NOT OFTEN USED AS PREPARATION FOR THE NOI/IOI
 // header file
 #include <bits/stdc++.h>
 // pragma
