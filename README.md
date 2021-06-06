@@ -5,4 +5,4 @@ TLX: https://tlx.toki.id/profiles/joelgunawan<br/>
 CodeChef: https://www.codechef.com/users/joelgunawan<br/>
 
 # Compilers
-C++: GCC<br/>
+C++: GCC 9.3.0<br/>
