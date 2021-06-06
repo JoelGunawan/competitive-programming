@@ -1,43 +1,51 @@
-#include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-void solve()
+int main()
 {
-    int n;
-    string s, t;
-    cin >> n >> s >> t;
-    int difference = 0, firstdifference, seconddifference;
+    int n, k;
+    cin >> n >> k;
+    vector<int> init(n);
     for(int i = 0; i < n; ++i)
     {
-        if(s[i] != t[i])
+        cin >> init[i];
+    }
+    deque<int> screen;
+    for(int i = 0; i < n; ++i)
+    {
+        bool found = false;
+        for(int j = 0; j < screen.size(); ++j)
         {
-            ++difference;
-            if(difference == 1) firstdifference = i;
-            else if(difference == 2) seconddifference = i;
+            if(screen[j] == init[i])
+            {
+                found = true;
+                break;
+            }
+        }
+        if(found)
+        {
+            continue;
+        }
+        else
+        {
+            if(screen.size() == k)
+            {
+                screen.push_front(init[i]);
+                screen.pop_back();
+            }
             else
             {
-                cout << "No" << endl;
-                return;
+                screen.push_front(init[i]);
             }
         }
     }
-    if(difference == 0)
+    cout << screen.size() << endl;
+    for(int i = 0; i < screen.size(); ++i)
     {
-        cout << "Yes" << endl;
+        cout << screen[i];
+        if(i == n - 1) cout << endl;
+        else cout << " ";
     }
-    else if(difference == 2)
-    {
-        if(s[firstdifference] == s[seconddifference] && t[firstdifference] == t[seconddifference]) cout << "Yes" << endl;
-        else cout << "No" << endl;
-    }
-    else cout << "No" << endl;
-}
-
-int main()
-{
-    int t;
-    cin >> t;
-    while(t--) solve();
     return 0;
 }
