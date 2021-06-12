@@ -12,7 +12,6 @@
 #define vs vector<string>
 #define STR string
 #define pb push_back
-#define ULL unsigned long long
 #define nextline "\n"
 #define TEST cout << "TEST" << endl;
 
