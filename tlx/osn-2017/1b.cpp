@@ -4,89 +4,61 @@
 #pragma GCC target("avx2")
 #pragma GCC optimize("O3")
 using namespace std;
-int bruteForce(int a, int k, string p, string s)
-{
-    if(a == k)
-    {
-        int res = 0;
-        for(int i = 0; i < s.size(); ++i)
-        {
-            if(p[i] == '1')
-                res += (s[i] - '0');
-        }
-        return res;
-    }
+
+vector<vector<vector<short>>> memo;
+vector<short> vals;
+vector<short> one;
+
+short general(short a, short b, short l)
+{ 
+    //cout << a << " " << b << " " << l << endl;
+    if(l <= 0)
+        return 0;
+    else if(a == 0 || b == 0)
+        return -1;
+    else if(memo[a - 1][b - 1][l] != -2)
+        return memo[a - 1][b - 1][l];
+    int x = general(a - 1, b, l), y = general(a - 1, b - 1, l - vals[a - 1]);
+    int res = INT_MAX;
+    if(x != -1)
+        res = min(res, x);
+    if(y != -1)
+        res = min(res, y + abs(a - 1 - one[b - 1]));
+    if(res == INT_MAX)
+        memo[a - 1][b - 1][l] = -1;
     else
-    {
-        int res = bruteForce(a + 1, k, p, s);
-        for(int i = 0; i < s.size() - 1; ++i)
-        {
-            swap(s[i], s[i + 1]);
-            res = max(res, bruteForce(a + 1, k, p, s));
-            swap(s[i], s[i + 1]);
-        }
-        return res;
-    }
+        memo[a - 1][b - 1][l] = res;
+    return memo[a - 1][b - 1][l];
 }
+
 int main()
 {
     ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
-    ll n, k; string subsoal, p, s;
-    cin >> subsoal >> n >> k >> p >> s;
-    // k is equal to k % (n + (n + 1) / 2)
-    // we can make a O(n^3) algo
-    /*
-    if(subsoal[1] == '1')
-        cout << 25 << endl;
-    else if(subsoal[2] == '2')
+    ll n, k, len = 0; string subsoal;
+    cin >> subsoal >> n >> k;
+    k = min(n * (n - 1) / 2, k);
+    vals = vector<short>(n);
+    for(int i = 0; i < n; ++i)
     {
-        sort(p.begin(), p.end(), greater<int>()); int counter = 0;
-        for(int i = 0; i < n; ++i)
-            if(s[i] == '1')
-                ++counter;
-        int res = 0;
-        for(int i = 0; i < counter; ++i)
-            res += (p[i] - '0');
-        cout << res << endl;
+        char c;
+        cin >> c;
+        vals[i] = c - '0';
+        len += vals[i];
     }
-    // we'll try to do the solution for every subproblem
-    else if(subsoal[3] == '3')
-        // just brute force every move k
-        cout << bruteForce(0, k, s, p) << endl;
-    */
-    if(subsoal[4] == '4')
+    for(int i = 0; i < n; ++i)
     {
-        set<int> ones;
-        for(int i = 0; i < s.size(); ++i)
-            if(s[i] == '1')
-                ones.insert(i);
-        int res = 0;
-        for(ll i = 0; i < (1 << n); ++i)
-        {
-            set<int> positive;
-            for(ll j = 0; j < n; ++j)
-                if(i & (1 << j))
-                    positive.insert(j);
-            if(ones.size() == positive.size())
-            {
-                // check whether it is possible to do such rotation in k moves
-                auto it2 = positive.begin();
-                int distance = 0, localres = 0;
-                for(auto it = ones.begin(); it != ones.end(); ++it)
-                {
-                    distance += abs(*it2 - *it);
-                    localres += (p[*it2] - '0');
-                    ++it2;
-                }
-                if(k >= distance)
-                    res = max(res, localres);
-            }
-        }
-        cout << res << endl;   
+        char c;
+        cin >> c;
+        if(c == '1')
+            one.push_back(i);
     }
-    else if(subsoal[6] == '6')
+    memo = vector<vector<vector<short>>>(n, vector<vector<short>>(one.size(), vector<short>(len + 1, -2)));
+    short tmp = general(n, one.size(), len);
+    while(tmp == -1 || tmp > k)
     {
-        
+        --len;
+        tmp = general(n, one.size(), len);
     }
+    cout << len << endl;
     return 0;
 }
