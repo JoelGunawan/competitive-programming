@@ -17,10 +17,7 @@ ll powmod(ll a, ll b)
     else
     {
         ll tmp = powmod(a, b / 2);
-        if(b & 1)
-            return mulmod(tmp, mulmod(tmp, a));
-        else
-            return mulmod(tmp, tmp);
+        return b & 1 ? mulmod(tmp, mulmod(tmp, a)) : mulmod(tmp, tmp);
     }
 }
 ll addmod(ll a, ll b)
