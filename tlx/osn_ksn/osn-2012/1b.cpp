@@ -4,110 +4,34 @@ using namespace std;
 int main()
 {
     ios_base::sync_with_stdio(false); cin.tie(nullptr);
-    string s;
-    cin >> s >> s;
-    int n;
-    cin >> n;
-    vector<int> x(n); vector<vector<int>> a(n, vector<int>(n)), b;
+    string subsoal; int n;
+    cin >> subsoal >> subsoal >> n;
+    int a[n][n], x[n];
     for(int i = 0; i < n; ++i)
         cin >> x[i];
     for(int i = 0; i < n; ++i)
         for(int j = 0; j < n; ++j)
             cin >> a[i][j];
-    bool possible = 1, allzero = 1;
+    // check for all zeros
+    // we get a set of what we have to xor if we do an inversion
+    set<int> inversion1[n], inversion2[n];
+    bool invalid = 0, first = 1, second = 1;
+    int inverted[n];
     for(int i = 0; i < n; ++i)
     {
+        // try inversion
         for(int j = 0; j < n; ++j)
-        {
-            if(a[i][j])
-                allzero = 0;
-            if(a[i][j] && !x[i] && !x[j])
-                possible = 0;
-        }
-    }
-    b = a;
-    if(!possible)
-    {
-        cout << -1 << endl;
-        return 0;
-    }
-    else if(allzero)
-    {
-        cout << 0 << endl;
-        return 0;
-    }
-    int first;
-    for(int i = 0; i < n; ++i)
+            inverted[j] = a[i][j] ^ x[j];
         if(x[i])
-        {
-            first = i;
-            break;
-        }
-    int res1 = 0, res2 = 0;
-    // do vertical with first then horizontal
-    for(int i = 0; i < n; ++i)
-    {
-        if(a[first][i])
-        {
-            for(int j = 0; j < n; ++j)
-                a[j][i] ^= x[j];
-            ++res1;
-        }
+
+        // try no inversion
+
     }
-    for(int i = 0; i < n; ++i)
-    {
-        // if there is a one do xor
-        for(int j = 0; j < n; ++j)
-        {
-            if(a[i][j])
-            {
-                for(int k = 0; k < n; ++k)
-                    a[i][k] ^= x[k];
-                ++res1;
-                break;
-            }
-        }
-    }
-    for(int i = 0; i < n; ++i)
-    {
-        if(b[i][first])
-        {
-            for(int j = 0; j < n; ++j)
-                b[i][j] ^= x[j];
-            ++res2;
-        }
-    }
-    for(int i = 0; i < n; ++i)
-    {
-        for(int j = 0; j < n; ++j)
-        {
-            if(b[j][i])
-            {
-                for(int k = 0; k < n; ++k)
-                    b[k][i] ^= x[k];
-                ++res2;
-                break;
-            }
-        }
-    }
-    bool pos1 = 1, pos2 = 1;
-    for(int i = 0; i < n; ++i)
-    {
-        for(int j = 0; j < n; ++j)
-        {
-            if(a[i][j])
-                pos1 = 0;
-            if(b[i][j])
-                pos2 = 0;
-        }
-    }
-    if(pos1 & pos2)
-        cout << min(res1, res2) << endl;
-    else if(pos1)
-        cout << res1 << endl;
-    else if(pos2)
-        cout << res2 << endl;
-    else
+    int firstcounter = inversion1[0].size(), secondcounter = inversion2[0].size();
+
+    if(invalid || !(first || second))
         cout << -1 << endl;
+    else
+
     return 0;
 }
