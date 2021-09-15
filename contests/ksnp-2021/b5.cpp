@@ -26,7 +26,6 @@ int main()
         }
     }
     sort(array, array + n * m, compfunc);
-    /*
     for(int i = 0; i < q; ++i)
     {
         ll query;
@@ -34,10 +33,4 @@ int main()
         --query;
         cout << array[query].first << "/" << array[query].second << endl;
     }
-    */
-    for(int i = 0; i < n * m; ++i)
-        cout << array[i].second << " ";
-   //int n, m, a, b, q;
-   //cin >> n >> m >> a >> b >> q;
-
 }
