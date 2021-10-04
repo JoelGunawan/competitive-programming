@@ -12,15 +12,7 @@ int main()
             for(int k = 0; k < l; ++k)
                 cin >> in, a[i][j][k] = in;
     int pref[d][h][l];
-    for(int i = 0; i < d; ++i)
-    {
-        for(int j = 0; j < h; ++j)
-        {
-            for(int k = 0; k < l; ++k)
-            {
-                if(i == 0)
-            }
-        }
-    }
+    // for each possible rectangle, find the longest possible distance
+    
     return 0;
 }
