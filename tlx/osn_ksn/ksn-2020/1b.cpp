@@ -81,6 +81,23 @@ int main()
     else
     {
         // increasing sequence test case
+        // use prefix sum and do a modulo
+        vector<pair<ll, int>> prefix = {{0, 0}};
+        ll diff = h[0]; int prev = 0;
+        for(int i = 1; i < n; ++i)
+        {
+            if(h[i] != h[i - 1])
+                prefix.push_back({diff * (n - prev) + prefix[prefix.size() - 1].first, i}), diff = h[i] - h[i - 1], prev = i;
+        }
+        prefix.push_back({diff * (n - prev) + prefix[prefix.size() - 1].first,prev});
+        for(int i = 0; i < q; ++i)
+        {
+            ll k;
+            cin >> k;
+            pair<ll, int> a = *--lower_bound(prefix.begin(), prefix.end(), make_pair(k, 0));
+            k -= a.first;
+            cout << (k - 1) % (n - a.second) + a.second + 1 << endl;
+        }
     }
     return 0;
 }
