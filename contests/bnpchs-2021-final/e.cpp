@@ -13,9 +13,13 @@
 #pragma GCC optimize("unroll-loops")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
+void test_case()
+{
+    
+}
 int main()
 {
     fast_io();
-    
+    test_case();
     return 0;
 }

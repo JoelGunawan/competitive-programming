@@ -13,9 +13,30 @@
 #pragma GCC optimize("unroll-loops")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
+void test_case()
+{
+    string s;
+    cin >> s;
+    char prev = 'a';
+    int counter = 0;
+    for(int i = 0; i < s.size(); ++i)
+        if(s[i] != prev)
+            ++counter, prev = s[i];
+    bool dp[counter + 1]; dp[0] = 0;
+    for(int i = 1; i <= counter; ++i)
+    {
+        dp[i] = (!dp[i - 1]);
+        if(i > 2)
+            dp[i] |= (!dp[i - 2]);
+    }
+    if(dp[counter])
+        cout << "Filco" << endl;
+    else
+        cout << "Riberto" << endl;
+}
 int main()
 {
     fast_io();
-    
+    test_case();
     return 0;
 }
