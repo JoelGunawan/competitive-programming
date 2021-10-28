@@ -2,6 +2,25 @@
 #define ll long long
 #define endl "\n"
 using namespace std;
+struct seg_tree
+{
+    int size; vector<int> arr, l, r;
+    seg_tree(int size_input, int default_value)
+    {
+        size = size_input;
+        arr = vector<int>(size_input + 1, default_value);
+        l = vector<int>(size_input + 1), r = vector<int>(size_input + 1);
+        
+    }
+    void modify(int val, int cur)
+    {
+
+    }
+    int query(int l, int r, int val, int cur)
+    {
+        
+    }
+};
 int main()
 {
     ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -13,7 +32,11 @@ int main()
         cin >> h[i], maximum = max(maximum, h[i]), minimum = min(minimum, h[i]), sum += h[i];
     int q;
     cin >> q;
-    if(n <= 5 * 1e3)
+    if(true)
+    {
+
+    }
+    else if(n <= 5 * 1e3)
     {
         // use a n^2 approach
         // find what numbers exist and put them in a prefix array
