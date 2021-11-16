@@ -13,7 +13,8 @@ int main()
     for(int i = 0; i < n; ++i)
         cin >> a[i].first >> a[i].second;
     // sparse segment tree bisa
-    // anyways use binser
-
+    // anyways sort and use binser?
+    // 2 people know each other if and only if there is an index where the start or the end index is inside of a node
+    
     return 0;
 }

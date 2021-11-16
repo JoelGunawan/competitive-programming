@@ -7,6 +7,15 @@ int main()
 {
     string subsoal; int n, k;
     cin >> subsoal >> n >> k;
+    int a[n], b[n];
+    for(int i = 0; i < n; ++i)
+        cin >> a[i], b[i] = a[i];
+    // we need to maintain 2 multisets
+    // first is the sorted, second is the current actual
+    // if both are the same, then that is one "segment"
+    
+
+    /*
     vector<int> a(n);
     for(int i = 0; i < n; ++i)
         cin >> a[i];
@@ -96,4 +105,5 @@ int main()
     for(auto it = betweens.begin(); it != betweens.end(); ++it)
         res += -(*it);
     cout << k + res << endl;
+    */
 }
