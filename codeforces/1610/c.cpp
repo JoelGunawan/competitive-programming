@@ -25,26 +25,28 @@ void test_case()
         cin >> x >> y;
         a[i] = {x, y};
     }
-    vector<int> ans; int max_size = 0;
-    for(int i = 0; i < (1 << n); ++i)
+    int left = 1, right = n, res = 1;
+    while(left <= right)
     {
-        vector<int> cur;
-        for(int j = 0; j < n; ++j)
-            if(i & (1 << j))
-                cur.pb(j);
-        bool valid = 1;
-        for(int j = 0; j < cur.size(); ++j)
+        int mid = (left + right) / 2;
+        //cout << mid << endl;
+        // try to construct the solution for mid
+        int x = mid - 1, y = 0, cnt = 0;
+        for(int i = 0; i < n; ++i)
         {
-            if(a[cur[j]].fi < cur.size() - j - 1 || a[cur[j]].se < j)
-                valid = 0;
+            //cout << x << " " << y << " " << a[i].fi << " " << a[i].se << endl;
+            if(a[i].fi >= x && a[i].se >= y)
+                --x, ++y, ++cnt;
+            if(x < 0)
+                break;
         }
-        if(valid && cur.size() > max_size)
-            ans = cur, max_size = cur.size();
+        if(cnt == mid)
+            res = mid, left = mid + 1;
+        else
+            right = mid - 1;
     }
-    cout << "ANSWER" << endl;
-    for(int i = 0; i < ans.size(); ++i)
-        cout << ans[i] << " ";
-    cout << endl;
+    cout << res << endl;
+    //cout << "BREAK" << endl;
 }
 int main()
 {
