@@ -1,22 +1,25 @@
 #include <bits/stdc++.h>
+#define ll long long
 using namespace std;
 int main()
 {
     int m;
     cin >> m;
-    tuple<int, int, int> a[m];
-    int t, s, p;
+    vector<pair<int, int>> end[15002];
     for(int i = 0; i < m; ++i)
-        cin >> t >> s >> p, a[i] = {t, s, p};
-    sort(a, a + m);
-    int dp[10001], currentindex = 0;
-    memset(dp, 0, sizeof(dp));
-    for(int i = 1; i <= 10000; ++i)
     {
-        dp[i] = max(dp[i], dp[i - 1]);
-        while(get<0>(a[currentindex]) == i)
-            dp[get<1>(a[currentindex])] = max(dp[i] + get<2>(a[currentindex]), dp[get<1>(a[currentindex])]), ++currentindex;    
+        int s, e, p;
+        cin >> s >> e >> p;
+        end[e + 1].push_back({s, p});
     }
-    cout << dp[10000] << endl;
+    ll dp[15002];
+    dp[0] = 0;
+    for(int i = 1; i <= 15001; ++i)
+    {
+        dp[i] = dp[i - 1];
+        for(int j = 0; j < end[i].size(); ++j)
+            dp[i] = max(dp[i], dp[end[i][j].first] + end[i][j].second);
+    }
+    cout << dp[15001] << endl;
     return 0;
 }
