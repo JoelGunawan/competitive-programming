@@ -47,10 +47,9 @@ int main()
     // cek elemennya
     // kalo misal ada elemen di array atas yg lebih besar dari array bawah ilangin aja array bawahnya
     // dan kita pake subsetnya cuman yang >= the minimum maximum in the arr
-    int cur_max1[2][1 << n], cur_max2[2][1 << n];
-    memset(cur_max1, 0, sizeof(cur_max1));
-    memset(cur_max2, 0, sizeof(cur_max2));
-    for(int i = 0; i < arr.size() / 2; ++i)
+    int cur_max[2][1 << n];
+    memset(cur_max, 0, sizeof(cur_max));
+    for(int i = 0; i < arr.size(); ++i)
     {
         // brute force setiap subset
         // trs cari maximumnya
@@ -66,33 +65,12 @@ int main()
                         for(int o = 0; o < n; ++o)
                             if((1 << o) & l)
                                 tmp += arr[i][(j + o) % n];
-                        cur_max1[(i + 1) % 2][k] = max(cur_max1[(i + 1) % 2][k], tmp + cur_max1[i % 2][k ^ l]);
+                        cur_max[(i + 1) % 2][k] = max(cur_max[(i + 1) % 2][k], tmp + cur_max[i % 2][k ^ l]);
                     }
                 }
             }
         }
     }
-    for(int i = arr.size() / 2; i < arr.size(); ++i)
-    {
-        // brute force setiap subset
-        // trs cari maximumnya
-        for(int j = 0; j < n; ++j)
-        {
-            for(int k = 1; k < 1 << n; ++k)
-            {
-                for(int l = 0; l <= k; ++l)
-                {
-                    if((k | l) == k)
-                    {
-                        int tmp = 0;
-                        for(int o = 0; o < n; ++o)
-                            if((1 << o) & l)
-                                tmp += arr[i][(j + o) % n];
-                        cur_max2[(i + 1) % 2][k] = max(cur_max2[(i + 1) % 2][k], tmp + cur_max2[i % 2][k ^ l]);
-                    }
-                }
-            }
-        }
-    }
+    cout << cur_max[arr.size() % 2][(1 << n) - 1] << endl;
     return 0;
 }
