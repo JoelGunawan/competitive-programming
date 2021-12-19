@@ -2,22 +2,23 @@
 // header file
 #include <bits/stdc++.h>
 // pragma
-#pragma GCC target("avx2")
-#pragma GCC optimize("O3")
+#pragma GCC optimize("Ofast")
 #pragma GCC optimize("unroll-loops")
 // macros
 #define endl "\n"
 #define ll long long
-#define mp(a, b) make_pair(a, b)
-#define pb(a) push_back(a)
-#define pf(a) push_front(a)
-#define ins(a) insert(a)
-
+#define mp make_pair
+#define ins insert
+#define lb lower_bound
+#define pb push_back
+#define ub upper_bound
+#define lll __int128
+#define fi first
+#define se second
 using namespace std;
 
 int main()
 {
-    // fast io using cin/cout
-    ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+    ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
     return 0;
 }
