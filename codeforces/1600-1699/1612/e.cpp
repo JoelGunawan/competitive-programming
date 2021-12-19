@@ -20,10 +20,6 @@ int main()
         for(int j = 1; j <= 20; ++j)
             ++cnt[m][j];
     }
-    for(int i = 1; i <= 2 * 1e5; ++i)
-    {
-        // calculate contribution for each k
-
-    }
+    
     return 0;
 }
