@@ -1,0 +1,49 @@
+// THIS TEMPLATE IS NOT OFTEN USED AS PREPARATION FOR THE NOI/IOI
+// header file
+#include <bits/stdc++.h>
+// pragma
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
+// macros
+#define endl "\n"
+#define ll long long
+#define mp make_pair
+#define ins insert
+#define lb lower_bound
+#define pb push_back
+#define ub upper_bound
+#define lll __int128
+#define fi first
+#define se second
+using namespace std;
+
+int main()
+{
+    ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+    int t;
+    cin >> t;
+    while(t--) {
+        int n;
+        cin >> n;
+        int a[n];
+        for(int i = 0; i < n; ++i)
+            cin >> a[i];
+        bool complete[n + 1];
+        memset(complete, 0, sizeof(complete));
+        for(int i = 0; i < n; ++i) {
+            while(a[i] > 0 && (a[i] > n || complete[a[i]]))
+                a[i] >>= 1;
+            complete[a[i]] = 1;
+        }
+        bool ans = 1;
+        for(int i = 1; i <= n; ++i) {
+            if(!complete[i])
+                ans = 0;
+        }
+        if(ans)
+            cout << "YES" << endl;
+        else
+            cout << "NO" << endl;
+    }
+    return 0;
+}
