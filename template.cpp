@@ -1,4 +1,3 @@
-// THIS TEMPLATE IS NOT OFTEN USED AS PREPARATION FOR THE NOI/IOI
 // header file
 #include <bits/stdc++.h>
 // pragma
@@ -17,8 +16,7 @@
 #define se second
 using namespace std;
 
-int main()
-{
+int main() {
     ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
     return 0;
 }
