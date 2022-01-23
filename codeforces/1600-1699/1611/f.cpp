@@ -16,16 +16,17 @@ struct segtree
         while(tmp < size)
             tmp *= 2;
         arr_size = tmp;
-        arr = vector<ll>(tmp * 2, LLONG_MAX);
+        arr = vector<ll>(tmp * 2, 0);
     }
     void update(int index, int value)
     {
-        arr[index + arr_size] = value;
+        arr[index + arr_size] += value;
+        //cout << "UPD: " << index << " " << arr[index + arr_size] << endl;
         private_update((index + arr_size) / 2);
     }
     ll merge(ll a, ll b)
     {
-        return min(a, b);
+        return a + b;
     }
     void private_update(int index)
     {
@@ -36,7 +37,7 @@ struct segtree
     ll query(int cur, int cur_left, int cur_right, int left, int right)
     {
         if(cur_right < left || cur_left > right)
-            return LLONG_MAX;
+            return 0;
         else if(cur_left >= left && cur_right <= right)
             return arr[cur];
         else
@@ -45,46 +46,60 @@ struct segtree
             return merge(query(2 * cur, cur_left, mid, left, right), query(2 * cur + 1, mid + 1, cur_right, left, right));
         }
     }
+    ll q(int x) {
+        return query(1, 0, arr_size - 1, 0, x);
+    }
 };
 void test_case()
 {
     segtree seg;
     int n, s;
     cin >> n >> s;
-    seg.build(n);
-    int a[n];
-    for(int i = 0; i < n; ++i)
+    ll a[n + 1];
+    seg.build(n + 5);
+    for(int i = 1; i <= n; ++i) {
         cin >> a[i];
-    // segtree on prefix array
-    // binary search minimum query for prefix array
-    ll prefix[n];
-    prefix[0] = a[0];
-    for(int i = 1; i < n; ++i)
-        prefix[i] = prefix[i - 1] + a[i];
-    for(int i = 0; i < n; ++i)
-        seg.update(i, prefix[i]);
-    int max_len = 0, ans_left, ans_right;
-    for(int i = 0; i < n; ++i)
-    {
-        if(s + a[i] >= 0)
-        {
-            int left = i, right = n - 1, res = left;
-            while(left <= right)
-            {
-                int mid = (left + right) / 2;
-                if((i == 0 && seg.query(1, 0, seg.arr_size - 1, i, mid) + s >= 0) || (i != 0 && seg.query(1, 0, seg.arr_size - 1, i, mid) - prefix[i - 1] + s >= 0))
-                    res = mid, left = mid + 1;
-                else
-                    right = mid - 1;
+    }
+    int r = 1, res = 0;
+    int lr, rr;
+    for(int i = 1; i <= n; ++i) {
+        ll cur = a[i] + s;
+        //cout << i << " " << cur << " " << seg.q(i) << endl;
+        if(cur >= seg.q(i) && cur >= 0) {
+            if(i > r)
+                r = i;
+            ll tmp = cur - seg.q(i);
+            seg.update(i, tmp);
+            seg.update(r + 1, -tmp);
+            cur = seg.q(r);
+            //cout << cur << " " << a[r + 1] << endl;
+            while(r < n && cur + a[r + 1] >= 0) {
+                ++r;
+                cur += a[r];
+                ll tmp = cur - seg.q(r);
+                seg.update(r, tmp);
+                seg.update(r + 1, -tmp);
+                //cout << i << " " << cur << " " << r << " " << seg.q(r) << endl;
+                //cout << "R: " << r << " " << cur << endl;
             }
-            if(res - i + 1 > max_len)
-                ans_left = i + 1, ans_right = res + 1, max_len = res - i + 1;
+            //cout << i << " " << r << endl;
+            if(r - i + 1 >= res) {
+                lr = i, rr = r;
+                res = r - i + 1;
+            }
         }
     }
-    if(max_len == 0)
+    //cout << endl;
+    //for(int i = 1; i <= n + 1; ++i)
+    //    cout << seg.q(i) << " ";
+    //cout << endl;
+    //for(int i = 1; i < seg.arr.size(); ++i) 
+        //cout << seg.arr[i] << " ";
+    //cout << endl;
+    if(res == 0)
         cout << -1 << endl;
     else
-        cout << ans_left << " " << ans_right << endl;
+        cout << lr << " " << rr << endl;
 }
 int main()
 {
