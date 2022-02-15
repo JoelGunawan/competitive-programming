@@ -49,7 +49,7 @@ int main() {
             ans = 0;   
     }
     if(!ans)
-        cout << -1 << endl, exit(0);
+        cout << -1 << endl, exit
     bool vis[n + 1];
     memset(vis, 0, sizeof(vis));
     for(int i = 1; i <= n; ++i) {
