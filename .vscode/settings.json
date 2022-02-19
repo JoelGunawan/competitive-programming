@@ -85,7 +85,8 @@
         "source_location": "cpp",
         "latch": "cpp",
         "semaphore": "cpp",
-        "syncstream": "cpp"
+        "syncstream": "cpp",
+        "hash_map": "cpp"
     },
     "python.testing.unittestArgs": [
         "-v",
