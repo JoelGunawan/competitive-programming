@@ -56,7 +56,6 @@ int main() {
             if(cur.x < 0 || (cur.x == 0 && cur.y < 0))
                 cur.x *= -1, cur.y *= -1;
             ll tmp = gcd(abs(cur.x), abs(cur.y));
-            tmp = gcd(tmp, abs(cur.c));
             cur.x /= tmp, cur.y /= tmp;
             cur.c = (a[i].y * cur.x - a[i].x * cur.y);
             //cout << cur.x << " " << cur.y << " " << cur.c << endl;
