@@ -22,4 +22,4 @@ struct dsu {
         }
         return x != y;
     }
-}
+};
