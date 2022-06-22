@@ -1,0 +1,1 @@
+g++ -o game grader.cpp game.cpp -O2 -lm -std=c++17 
