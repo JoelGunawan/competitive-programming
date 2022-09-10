@@ -1,36 +1,150 @@
 #include <bits/stdc++.h>
-#define ll long long
 #define pb push_back
-//#define endl "\n"
-#pragma GCC optimize("Ofast")
 using namespace std;
-struct dsu{
-    int head[20001], size[20001];
-    void build()
-    {
+const int lim = 2e4 + 5;
+struct dsu {
+    int head[lim], size[lim];
+    dsu() {
         memset(head, -1, sizeof(head));
-        for(int i = 0; i <= 20000; ++i)
-            size[i] = 1;
+        fill(size, size + lim, 1);
     }
-    int find_head(int node)
-    {
-        if(head[node] == -1)
-            return node;
-        else
-            return find_head(head[node]);
+    int find_head(int nd) {
+        while(head[nd] != -1)
+            nd = head[nd];
+        return nd;
     }
-    void merge(int x, int y)
-    {
+    bool merge(int x, int y) {
         x = find_head(x), y = find_head(y);
-        if(x != y)
-        {
-            if(size[x] > size[y])
-                size[x] += size[y], head[y] = x;
-            else
-                size[y] += size[x], head[x] = y;
+        if(x != y) {
+            if(size[x] < size[y])
+                swap(x, y);
+            size[x] += size[y], head[y] = x;
         }
+        return x != y;
     }
 };
+int main() {
+    int n, m, k;
+    vector<pair<int, int>> batu, beton;
+    cin >> n >> m >> k;
+    for(int i = 0; i < m; ++i) {
+        int u, v, c;
+        cin >> u >> v >> c;
+        if(c)
+            beton.pb({u, v});
+        else
+            batu.pb({u, v});
+    }
+    dsu dsu1, dsu2, dsu3;
+    vector<pair<int, int>> batu_penting, beton_penting;
+    for(auto i : batu)
+        dsu1.merge(i.first, i.second);
+    for(auto i : beton) {
+        if(dsu1.merge(i.first, i.second))
+            beton_penting.push_back(i);
+    }
+
+    for(auto i : beton)
+        dsu2.merge(i.first, i.second);
+    for(auto i : batu) {
+        if(dsu2.merge(i.first, i.second))
+            batu_penting.push_back(i);
+    }
+    // jumlah total edge -> n - 1
+    if(dsu1.size[dsu1.find_head(1)] != n || batu_penting.size() > k || beton_penting.size() > n - 1 - k)
+        cout << "no solution" << endl, exit(0);
+    for(auto i : batu_penting)
+        cout << i.first << " " << i.second << " " << 0 << endl, dsu3.merge(i.first, i.second);
+    for(auto i : beton_penting)
+        cout << i.first << " " << i.second << " " << 1 << endl, dsu3.merge(i.first, i.second);
+    for(int i = 0; i < k - batu_penting.size(); ++i) {
+        while(!dsu3.merge(batu.back().first, batu.back().second))
+            batu.pop_back();
+        cout << batu.back().first << " " << batu.back().second << " " << 0 << endl;
+        batu.pop_back();
+    }
+    for(auto i : beton) {
+        if(dsu3.merge(i.first, i.second))
+            cout << i.first << " " << i.second << " " << 1 << endl;
+    }
+}
+/*
+struct dsu {
+    int head[lim], size[lim];
+    dsu() {
+        memset(head, -1, sizeof(head));
+        fill(size, size + lim, 1);
+    }
+    int find_head(int nd) {
+        while(head[nd] != -1)
+            nd = head[nd];
+        return nd;
+    }
+    bool merge(int x, int y) {
+        x = find_head(x), y = find_head(y);
+        if(x != y) {
+            if(size[x] < size[y])
+                swap(x, y);
+            size[x] += size[y], head[y] = x;
+        }
+        return x != y;
+    }
+};
+int main() {
+    dsu concrete_only, cobble_only;
+    vector<pair<int, int>> crucial_cobble, crucial_concrete;
+    int n, m, k;
+    cin >> n >> m >> k;
+    vector<pair<int, int>> cobble_edge, concrete_edge;
+    for(int i = 0; i < m; ++i) {
+        int u, v, c;
+        cin >> u >> v >> c;
+        if(c)
+            concrete_edge.push_back({u, v});
+        else
+            cobble_edge.push_back({u, v});
+    }
+    for(auto i : concrete_edge) {
+        concrete_only.merge(i.first, i.second);
+    }
+    for(auto i : cobble_edge) {
+        cobble_only.merge(i.first, i.second);
+    }
+    for(auto i : concrete_edge) {
+        if(cobble_only.merge(i.first, i.second))
+            crucial_concrete.push_back(i);
+    }
+    for(auto i : cobble_edge) {
+        if(concrete_only.merge(i.first, i.second))
+            crucial_cobble.push_back(i);
+    }
+    if(cobble_only.size[cobble_only.find_head(1)] != n || concrete_only.size[concrete_only.find_head(1)] != n || crucial_concrete.size() > n - 1 - k || crucial_cobble.size() > k) {
+        cout << "no solution" << endl, exit(0);
+    }
+    dsu res;
+    for(auto i : crucial_concrete)
+        res.merge(i.first, i.second);
+    for(auto i : crucial_cobble)
+        res.merge(i.first, i.second);
+    vector<pair<int, int>> ans;
+    for(int i = 0; i < k - crucial_cobble.size(); ++i) {
+        while(!res.merge(cobble_edge.back().first, cobble_edge.back().second))
+            cobble_edge.pop_back();
+        cout << cobble_edge.back().first << " " << cobble_edge.back().second << " " << 0 << endl;
+        cobble_edge.pop_back();
+    }
+    for(auto i : concrete_edge) {
+        if(res.merge(i.first, i.second)) {
+            cout << i.first << " " << i.second << " " << 1 << endl;
+        }
+    }
+    for(auto i : crucial_concrete)
+        cout << i.first << " " << i.second << " " << 1 << endl;
+    for(auto i : crucial_cobble)
+        cout << i.first << " " << i.second << " " << 0 << endl;
+}
+*/
+/*
 int main()
 {
     ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -39,7 +153,6 @@ int main()
     vector<int> concrete[n + 1], cobble[n + 1];
     set<pair<bool, pair<int, int>>> roads;
     dsu final_graph, concrete_only;
-    final_graph.build(), concrete_only.build();
     for(int i = 0; i < m; ++i)
     {
         int u, v, c;
@@ -112,3 +225,4 @@ int main()
     }
     return 0;
 }
+*/

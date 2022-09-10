@@ -17,6 +17,37 @@
 #define se second
 using namespace std;
 struct line {
+    ll m, c;
+};
+ll eval(line a, ll x) {
+    return a.m * x + a.c;
+}
+int main() {
+    int n;
+    cin >> n;
+    pair<pair<ll, ll>, ll> a[n];
+    for(int i = 0; i < n; ++i)
+        cin >> a[i].fi.fi >> a[i].fi.se >> a[i].se;
+    sort(a, a + n);
+    deque<line> cht;
+    ll res = -1e18;
+    for(int i = 0; i < n; ++i) {
+        ll cur = a[i].fi.fi * a[i].fi.se - a[i].se;
+        if(i != 0) {
+            while(cht.size() >= 2 && eval(cht[1], a[i].fi.se) >= eval(cht[0], a[i].fi.se))
+                cht.pop_front();
+            cur = max(cur, eval(cht[0], a[i].fi.se) + a[i].fi.fi * a[i].fi.se - a[i].se);
+        }
+        line tmp;
+        tmp.m = -a[i].fi.fi;
+        tmp.c = cur;
+        res = max(res, cur);
+        cht.push_back(tmp);
+    }
+    cout << res << endl;
+}
+/*
+struct line {
     ll m = 0, c = 0;
 };
 
@@ -65,3 +96,4 @@ int main() {
     cout << res << endl;
     return 0;
 }
+*/
