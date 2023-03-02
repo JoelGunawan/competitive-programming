@@ -1,126 +1,87 @@
+// header file
 #include <bits/stdc++.h>
-#define ll long long
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+// pragma
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
+// macros
 #define endl "\n"
+#define ll long long
+#define mp make_pair
+#define ins insert
+#define lb lower_bound
+#define pb push_back
+#define ub upper_bound
+#define lll __int128
+#define fi first
+#define se second
 using namespace std;
-struct seg_tree
-{
-    int size; vector<int> arr, l, r;
-    seg_tree(int size_input, int default_value)
-    {
-        size = size_input;
-        arr = vector<int>(size_input + 1, default_value);
-        l = vector<int>(size_input + 1), r = vector<int>(size_input + 1);
-        
+using namespace __gnu_pbds;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_multiset;
+ll k = 0;
+const int lim = 1 << 18;
+struct segment_tree {
+    pair<int, int> a[2 * lim + 1];
+    void update(pair<int, int> val, int idx) {
+        idx += lim;
+        a[idx] = val;
+        idx >>= 1;
+        while(idx) {
+            a[idx] = min(a[2 * idx], a[2 * idx + 1]);
+            idx >>= 1;
+        }
     }
-    void modify(int val, int cur)
-    {
-
-    }
-    int query(int l, int r, int val, int cur)
-    {
-        
+    pair<int, int> query(int nd, int cl, int cr, int l, int r) {
+        if(cl >= l && cr <= r) {
+            return a[nd];
+        }
+        else if(cl > r || cr < l)
+            return {1e9 + 5, 1e9 + 5};
+        else {
+            int mid = (cl + cr) >> 1;
+            return min(query(2 * nd, cl, mid, l, r), query(2 * nd + 1, mid + 1, cr, l, r));
+        }
     }
 };
-int main()
-{
-    ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+segment_tree segtree;
+pair<ll, int> q[lim];
+int last_q = 0;
+ll ans[lim];
+void solve(int l, int r, int used) {
+    if(l > r)
+        return;
+    //cout << l << " " << r << " " << used << " " << k << " ";
+    pair<int, int> query = segtree.query(1, 0, lim - 1, l, r);
+    ll new_k = k + 1ll * (r - l + 1) * (query.fi - used) + (query.se - l);
+    while(q[last_q].se != 0 && q[last_q].fi <= new_k) {
+        // process query
+        ans[q[last_q].se] = (q[last_q].fi - 1 - k) % (r - l + 1) + l;
+        //cout << q[last_q].fi - 1 << " " << (r - l + 1) << " ";
+        ++last_q;
+    }
+    k = new_k;
+    //cout << k << " " << last_q << endl;
+    solve(l, query.se - 1, query.fi + 1);
+    solve(query.se + 1, r, query.fi);
+}   
+int main() {
+    ios_base::sync_with_stdio(0); cin.tie(NULL);
     int n;
     cin >> n;
-    int h[n], maximum = 0, minimum = INT_MAX;
-    ll sum = 0;
-    for(int i = 0; i < n; ++i)
-        cin >> h[i], maximum = max(maximum, h[i]), minimum = min(minimum, h[i]), sum += h[i];
-    int q;
-    cin >> q;
-    if(true)
-    {
-
-    }
-    else if(n <= 5 * 1e3)
-    {
-        // use a n^2 approach
-        // find what numbers exist and put them in a prefix array
-        vector<vector<int>> a; vector<ll> prefix = {0}; vector<int> cur;
-        minimum = INT_MAX;
-        ll idx = 0, lastindex;
-        while(h[idx] == 0)
-            ++idx;
-        lastindex = idx;
-        while(sum > 0)
-        {
-            if(idx == n || h[idx] == 0)
-            {
-                prefix.push_back(minimum * (idx - lastindex) + prefix[prefix.size() - 1]);
-                sum -= minimum * (idx - lastindex);
-                for(int i = lastindex; i < idx; ++i)
-                    h[i] -= minimum;
-                minimum = INT_MAX;
-                a.push_back(cur);
-                cur.clear();
-                idx = lastindex;
-                while(h[idx] == 0)
-                    ++idx;
-                lastindex = idx;
-            }
-            cur.push_back(idx + 1);
-            minimum = min(minimum, h[idx]);
-            ++idx;
-        }
-        for(int i = 0; i < q; ++i)
-        {
-            ll k;
-            cin >> k;
-            int lower_index = (lower_bound(prefix.begin(), prefix.end(), k) - prefix.begin()); --lower_index; k -= prefix[lower_index];
-            cout << a[lower_index][(k - 1) % a[lower_index].size()] << endl;
-        }
-    }
-    else if(maximum == minimum)
-    {
-        for(int i = 0; i < q; ++i)
-        {
-            ll k;
-            cin >> k;
-            cout << (k - 1) % n + 1 << endl;
-        }
-    }
-    else if((n <= 1e3 && maximum <= 1e3) || maximum <= 5)
-    {
-        // we can brute force this easy
-        int res[n * maximum], idx = 0, cur = 0, lastindex = 0;
-        while(sum > 0)
-        {
-            if(idx == n || h[idx] == 0)
-            {
-                idx = lastindex;
-                while(h[idx] == 0)
-                    ++idx, lastindex = idx;
-            }
-            --sum, res[cur++] = idx, --h[idx], ++idx;
-        }
-        int k;
-        for(int i = 0; i < q; ++i)
-            cin >> k, cout << res[k - 1] + 1 << endl;
-    }
-    else
-    {
-        // increasing sequence test case
-        // use prefix sum and do a modulo
-        vector<pair<ll, int>> prefix = {{0, 0}};
-        ll diff = h[0]; int prev = 0;
-        for(int i = 1; i < n; ++i)
-        {
-            if(h[i] != h[i - 1])
-                prefix.push_back({diff * (n - prev) + prefix[prefix.size() - 1].first, i}), diff = h[i] - h[i - 1], prev = i;
-        }
-        prefix.push_back({diff * (n - prev) + prefix[prefix.size() - 1].first,prev});
-        for(int i = 0; i < q; ++i)
-        {
-            ll k;
-            cin >> k;
-            pair<ll, int> a = *--lower_bound(prefix.begin(), prefix.end(), make_pair(k, 0));
-            k -= a.first;
-            cout << (k - 1) % (n - a.second) + a.second + 1 << endl;
-        }
-    }
+    int h[n + 1];
+    for(int i = 1; i <= n; ++i)
+        cin >> h[i], segtree.update({h[i], i}, i);
+    // find first minimum
+    // break at first minimum
+    // advance current k by such amount
+    int x;
+    cin >> x;
+    for(int i = 0; i < x; ++i)
+        cin >> q[i].fi, q[i].se = i + 1;
+    sort(q, q + x);
+    solve(1, n, 0);
+    for(int i = 1; i <= x; ++i)
+        cout << ans[i] << endl;
     return 0;
 }

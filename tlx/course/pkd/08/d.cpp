@@ -22,6 +22,21 @@ typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics
 
 int main() {
     ios_base::sync_with_stdio(0); cin.tie(NULL);
-
+    int n;
+    cin >> n;
+    int a[n + 1];
+    for(int i = 1; i <= n; ++i)
+        cin >> a[i];
+    a[0] = 1e9;
+    stack<int> s;
+    s.push(0);
+    ll res = 0;
+    for(int i = 1; i <= n; ++i) {
+        while(a[s.top()] <= a[i])
+            s.pop();
+        res += i - s.top();
+        s.push(i);
+    }
+    cout << res << endl;
     return 0;
 }

@@ -4,7 +4,7 @@
 #pragma GCC optimize("Ofast")
 #pragma GCC optimize("unroll-loops")
 // macros
-//#define endl "\n"
+// #define endl "\n"
 #define ll long long
 #define mp make_pair
 #define ins insert
@@ -31,6 +31,26 @@ void tc() {
     set<int> not_zero;
     for(int i = 1; i <= n; ++i)
         unused.pb(i);
+    /*
+    unused -> kita ga punya info tntng node ini
+    cur -> yang sedang kita cari
+    not_zero -> node yang kita pasti tahu bukan 0
+    untuk menyelesaikan ini, kita coba kerjakan untuk kasus n = 4 terlebih dahulu
+    misal a, b, c, d
+    cari mana yang bisa merupakan 0 dari beberapa query
+    mis a <= b <= c <= d
+    maka:
+    q(a, b, c) = c - a
+    q(a, b, d) = d - a
+    q(a, c, d) = d - a
+    q(b, c, d) = d - b
+    diketahui pasti d - a >= d -b dan d - a >= c - a
+    d - a = d - b jika a = b, sehingga semuanya tidak mungkin merupakan 0
+    d - a = c - a jika hanya c = d
+    dari sini kita bisa simpulkan jika kita tidak menggunakan x di query, dan hasil query tersebut maksimal
+    maka pasti x bukan 0
+    kita bisa lakukan proses ini berulang kali hingga bisa menemukan 2 angka yang bukan 0
+    */
     while(unused.size() > 0) {
         while(cur.size() < 4 && unused.size() > 0)
             cur.pb(unused.back()), unused.pop_back();

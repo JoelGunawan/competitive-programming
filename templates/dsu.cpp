@@ -8,7 +8,7 @@ struct dsu {
         fill(size, size + lim, 1);
     }
     int find_head(int nd) {
-        while(head[nd] == -1)
+        while(head[nd] != -1)
             nd = head[nd];
         return nd;
     }
@@ -23,3 +23,24 @@ struct dsu {
         return x != y;
     }
 };
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+    pair<int, pair<int, int>> a[m + 1];
+    for(int i = 1; i <= m; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        a[i] = make_pair(w, make_pair(u, v));
+    }
+    dsu dsu1;
+    sort(a + 1, a + m + 1);
+    int res = 0;
+    for(int i = 1; i <= m; ++i) {
+        if(dsu1.find_head(a[i].second.first) != dsu1.find_head(a[i].second.second)) {
+            res += a[i].first;
+            dsu1.merge(a[i].second.first, a[i].second.second);
+        }
+    }
+    cout << res << endl;
+}

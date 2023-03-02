@@ -1,148 +1,150 @@
+// header file
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+// pragma
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
+// macros
+#define endl "\n"
 #define ll long long
-#pragma GCC target("avx2")
-#pragma GCC optimize("O3")
+#define mp make_pair
+#define ins insert
+#define lb lower_bound
+#define pb push_back
+#define ub upper_bound
+#define lll __int128
+#define fi first
+#define se second
 using namespace std;
-vector<vector<vector<bool>>> sstate, tstate;
-string s, t;
+using namespace __gnu_pbds;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_multiset;
+char a[205][205];
 int n, m;
-vector<string> arr;
-void findT(int cur, int x, int y)
-{
-    if(tstate[cur][x][y] || arr[x][y] != t[cur])
-        return;
-    else
-    {
-        tstate[cur][x][y] = 1;
-        --cur;
-    }
-    if(cur == -1)
-        return;
-    if(x != n - 1)
-        findT(cur, x + 1, y);
-    if(x != 0)
-        findT(cur, x - 1, y);
-    if(y != m - 1)
-        findT(cur, x, y + 1);
-    if(y != 0)
-        findT(cur, x, y - 1);
+string s, t;
+bool as[205][205][205], at[205][205][205], svis[205][205][205], tvis[205][205][205];
+vector<pair<int, int>> nxt = {mp(1, 0), mp(0, 1), mp(-1, 0), mp(0, -1)};
+bool valid(int x, int y) {
+    return x >= 1 && x <= n && y >= 0 && y <= m;
 }
-void findS(int cur, int x, int y)
-{
-    if(sstate[cur][x][y] || arr[x][y] != s[cur])
-        return;
-    else
-    { 
-        sstate[cur][x][y] = 1;
-        ++cur;
+void sdfs(int x, int y, int idx) {
+    svis[x][y][idx] = 1;
+    if(a[x][y] == s[idx]) {
+        as[x][y][idx] = 1;
+        //cout << "S " << x << " " << y << " " << idx << endl;
+        if(idx == s.size() - 1) {
+            //cout << x << " " << y << endl;
+            return;
+        }
+        // cek kiri, kanan, atas, bawah
+        for(auto i : nxt) {
+            if(valid(x + i.fi, y + i.se) && !svis[x + i.fi][y + i.se][idx + 1]) {
+                sdfs(x + i.fi, y + i.se, idx + 1);
+            }
+        }
     }
-    if(cur == s.size())
-        return;
-    if(x != n - 1)
-        findS(cur, x + 1, y);
-    if(x != 0)
-        findS(cur, x - 1, y);
-    if(y != m - 1)
-        findS(cur, x, y + 1);
-    if(y != 0)
-        findS(cur, x, y - 1);
 }
-int main()
-{
-    string subsoal;
-    cin >> subsoal >> n >> m;
-    arr = vector<string>(n);
-    for(int i = 0; i < n; ++i)
-        cin >> arr[i];
+void tdfs(int x, int y, int idx) {
+    tvis[x][y][idx] = 1;
+    if(a[x][y] == t[idx]) {
+        at[x][y][idx] = 1;
+        //cout << "T " << x << " " << y << " " << idx << endl;
+        if(idx == t.size() - 1) {
+            return;
+        }
+        // cek kiri, kanan, atas, bawah
+        for(auto i : nxt) {
+            if(valid(x + i.fi, y + i.se) && !tvis[x + i.fi][y + i.se][idx + 1]) {
+                tdfs(x + i.fi, y + i.se, idx + 1);
+            }
+        }
+    }
+}
+int main() {
+    ios_base::sync_with_stdio(0); cin.tie(NULL);
+    string buang;
+    cin >> buang;
+    cin >> n >> m;
+    for(int i = 1; i <= n; ++i)
+        for(int j = 1; j <= m; ++j)
+            cin >> a[i][j];
     cin >> s >> t;
-    // brute force dfs all s and t
-    // we can use state memo, so that we don't duplicate max amount of states is (|s| * (n * m) + |t| * (n * m)) -> 10^6
-    // we need to consider when the end of s is equal to the start of t, we need to factor that in
-    // we find t from behind, we find s from the front
-    // we need to consider the length of the similar between s and t
-    string common = "";
-    int length = min(s.size(), t.size());
-    while(length > 0)
-    {
-        if(s.substr(s.size() - length, length) == t.substr(0, length))
-        {
-            common = t.substr(0, length);
-            break;
+    // common end of prefix start of suffix
+    // cari intersect mulai dari index ke berapa
+    reverse(t.begin(), t.end());
+    for(int i = 1; i <= n; ++i)
+        for(int j = 1; j <= m; ++j) {
+            sdfs(i, j, 0);
+            tdfs(i, j, 0);
         }
-        --length;
+    vector<int> common;
+    reverse(t.begin(), t.end());
+    for(int i = 0; i < min(s.size(), t.size()); ++i) {
+        //cout << s.substr(s.size() - i - 1, i + 1) << " " << t.substr(0, i + 1) << endl;
+        if(s.substr(s.size() - i - 1, i + 1) == t.substr(0, i + 1))
+            common.pb(i + 1);
     }
-    sstate = vector<vector<vector<bool>>>(s.size(), vector<vector<bool>>(n, vector<bool>(m, false)));
-    tstate = vector<vector<vector<bool>>>(t.size(), vector<vector<bool>>(n, vector<bool>(m, false)));
-    for(int i = 0; i < n; ++i)
-    {
-        for(int j = 0; j < m; ++j)
-        {
-            findS(0, i, j);
-            findT(t.size() - 1, i, j);
-        }
-    }
-    if(subsoal[7] == '7')
-    {
-        int ans = INT_MAX;
-        if(s[s.size() - 1] == t[0])
-        {
-            for(int i = 0; i < n; ++i)
-                for(int j = 0; j < m; ++j)
-                    if(sstate[s.size() - 1][i][j])
-                        ans = s.size();
-        }
-        else
-        {
-            // check for all scoords and tcoords
-            vector<pair<int, int>> scoords, tcoords;
-            for(int i = 0; i < n; ++i)
-            {
-                for(int j = 0; j < m; ++j)
-                {
-                    if(sstate[s.size() - 1][i][j])
-                        scoords.push_back(make_pair(i, j));
-                    if(t[0] == arr[i][j])
-                        tcoords.push_back(make_pair(i, j));
+    //for(auto i : common)
+    //    cout << i << " ";
+    //cout << endl;
+    int ans = 2e9;
+    for(int i = 1; i <= n; ++i) {
+        for(int j = 1; j <= m; ++j) {
+            for(auto k : common) {
+                // abcde cdefg
+                // common -> 3
+                // as -> di index (i, j) ada prefix s sampai posisi ke s.size() - k
+                // at -> di index (i, j) ada t
+                // ab 
+                // waktu cek c
+                // cek posisi (i, j) dia bisa buat prefix S dari a hingga c
+                // cek posisi (i, j) bisa buat t
+                // abcefg
+                // bzzzzz
+                // cdefgz
+                // abcde
+                // cdefg
+                // dua"nya memenuhi -> bisa (gabung)
+                //if(i == 7 && j == 5) {
+                //    cout << as[i][j][s.size() - k] << " " << at[i][j][t.size() - 1] << endl;
+                //}
+                if(as[i][j][s.size() - k] && at[i][j][t.size() - 1]) {
+                    ans = min(ans, (int)s.size() + (int)t.size() - k);
                 }
             }
-            for(int i = 0; i < scoords.size(); ++i)
-                for(int j = 0; j < tcoords.size(); ++j)
-                    ans = min(ans, (int)s.size() + (int)t.size() + abs(scoords[i].first - tcoords[j].first) + abs(scoords[i].second - tcoords[j].second) - 1);
         }
-        if(ans == INT_MAX)
-            cout << -1 << endl;
-        else
-            cout << ans << endl;
-        return 0;
     }
-    ll res = INT_MAX;
-    for(int i = 0; i <= common.size(); ++i)
-    {
-        vector<pair<int, int>> scoords, tcoords;
-        for(int j = 0; j < n; ++j)
-            for(int k = 0; k < m; ++k)
-            {
-                if(-(ll)common.size() - 1 + i < 0 && s.size() - (ll)common.size() - 1 + i >= 0 && sstate[s.size() - common.size() - 1 + i][j][k])
-                    scoords.push_back(make_pair(j, k));
-                if(i >= 0 && i < t.size() && tstate[i][j][k])
-                    tcoords.push_back(make_pair(j, k));
-            }
-        if((s == common && s.size() - (ll)common.size() - i + 1 == -1 && tcoords.size())
-            || (t == common && i == t.size() && scoords.size()))
-        {
-            res = 1;
+    if(ans != 2e9) {
+        cout << ans << endl, exit(0);
+    }
+    bool vis[n + 1][m + 1];
+    memset(vis, 0, sizeof(vis));
+    queue<pair<pair<int, int>, int>> bfs;
+    for(int i = 1; i <= n; ++i) {
+        for(int j = 1; j <= m; ++j) {
+            if(as[i][j][s.size() - 1])
+                bfs.push(mp(mp(i, j), 0));
+        }
+    }
+    while(bfs.size()) {
+        int x = bfs.front().fi.fi, y = bfs.front().fi.se, dist = bfs.front().se;
+        bfs.pop();
+        if(vis[x][y])
+            continue;
+        vis[x][y] = 1;
+        if(at[x][y][t.size() - 1]) {
+            ans = dist + s.size() + t.size() - 1;
             break;
         }
-        else if(scoords.size() == 0 || tcoords.size() == 0)
-            continue;
-        for(int j = 0; j < scoords.size(); ++j)
-            for(int k = 0; k < tcoords.size(); ++k)
-                if(scoords[j] != tcoords[k])
-                    res = min(res, (ll)abs(scoords[j].first - tcoords[k].first) + abs(scoords[j].second - tcoords[k].second));
+        for(auto i : nxt) {
+            if(!vis[x + i.fi][y + i.se] && valid(x + i.fi, y + i.se)) {
+                bfs.push(mp(mp(x + i.fi, y + i.se), dist + 1));
+            }
+        }
     }
-    if(res == INT_MAX)
+    if(ans == 2e9)
         cout << -1 << endl;
     else
-        cout << s.size() + t.size() - common.size() + res - 1 << endl;
+        cout << ans << endl;
     return 0;
 }

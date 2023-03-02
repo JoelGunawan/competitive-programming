@@ -53,11 +53,8 @@ int main() {
     for(int i = 0; i < m; ++i) {
         int u, v, w;
         cin >> u >> v >> w;
-        adj.pb(mp(mp(w, 0), mp(u, v)));
+        adj.pb(mp(mp(w, i), mp(u, v)));
     }
-    sort(adj.begin(), adj.end());
-    for(int i = 0; i < m; ++i)
-        adj[i].fi.se = i;
     int p, k, a, b, c;
     cin >> p >> k >> a >> b >> c;
     // find configuration of spanning trees

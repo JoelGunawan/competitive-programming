@@ -59,7 +59,7 @@ int memo[2][2][lim], nd[2][lim], m;
 int dp(bool pos, bool choose, int day) {
     if(day == m)
         return 0;
-    if(memo[pos][choose][day] != -1)
+    if(memo[pos][choose][day] != -2e9)
         return memo[pos][choose][day];
     int res = 0;
     if(choose)
@@ -75,7 +75,10 @@ int dp(bool pos, bool choose, int day) {
     return memo[pos][choose][day];
 }
 int main() {
-    memset(memo, -1, sizeof(memo));
+    for(int i = 0; i < 2; ++i)
+        for(int j = 0; j < 2; ++j)
+            for(int k = 0; k < lim; ++k)
+                memo[i][j][k] = -2e9;
     ios_base::sync_with_stdio(0); cin.tie(NULL);
     int n;
     cin >> n;

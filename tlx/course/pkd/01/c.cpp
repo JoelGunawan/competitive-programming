@@ -37,5 +37,7 @@ int main()
         if(before && after)
             cout << t << endl;
     }
+    string x = "a";
+    x += 'b';
     return 0;
 }
