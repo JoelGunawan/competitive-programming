@@ -22,7 +22,12 @@ typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics
 typedef tree<int, null_type, less<int>, rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 int main() {
     ios_base::sync_with_stdio(0); cin.tie(NULL);
-    // make every point as max point, then find left/right how much can do
-    
+    int n;
+    cin >> n;
+    int p[n + 1], q[n + 1];
+    for(int i = 1; i <= n; ++i)
+        cin >> p[i];
+    for(int i = 1; i <= n; ++i)
+        cin >> q[i];
     return 0;
 }
