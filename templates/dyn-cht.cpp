@@ -1,9 +1,12 @@
+#include <bits/stdc++.h>
+#define ll long long
 // source: https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp
 // Used in problem CS Squared Ends
 // Problem: A is an array of n integers. The cost of subarray A[l...r] is (A[l]-A[r])^2. Partition
 // the array into K subarrays having a minimum total cost
 // In case of initializing 'ans', check if 1e18 is enough. Might need LLONG_MAX
 
+using namespace std;
 const ll is_query = -(1LL<<62);
 struct Line {
     ll m, b;
@@ -47,26 +50,7 @@ ll a[10004];
 
 int main()
 {
-    cin>>n>>k;
-    FOR(i,1,n+1) cin>>a[i];
-    vector<ll> dp(n+1,1e18);
-    dp[0]=0;
-    FOR(i,0,k)
-    {
-        HullDynamic hd;
-        vector<ll> curr(n+1,1e18);
-
-        FOR(j,1,n+1)
-        {
-            ll m=2*a[j];
-            ll c=-a[j]*a[j]-dp[j-1];
-            hd.insert_line(m,c);
-            ll now=-hd.eval(a[j])+a[j]*a[j];
-            curr[j]=now;
-        }
-        dp=curr;
-    }
-    prnt(dp[n]);
-
+    HullDynamic hd
+    
     return 0;
 }
