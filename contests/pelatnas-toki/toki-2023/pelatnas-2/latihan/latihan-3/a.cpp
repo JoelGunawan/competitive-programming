@@ -223,6 +223,12 @@ int main() {
         }
         c.swap(cn);
     }
-    int max_sz = (n + k - 1) / k;
-    
+    int max_sz = (n + k - 1) / k, max_sz_cnt = n % k;
+    if(max_sz_cnt == 0) {
+        // berarti tinggal cari cycle paling kecil lolololol
+    }
+    else {
+        // pakai cara modulo harus tambah 1
+        int l = 0, r = n;
+    }
 }
