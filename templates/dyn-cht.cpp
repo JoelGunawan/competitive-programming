@@ -50,7 +50,7 @@ ll a[10004];
 
 int main()
 {
-    HullDynamic hd
+    HullDynamic hd;
     
     return 0;
 }
