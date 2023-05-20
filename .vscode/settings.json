@@ -119,7 +119,8 @@
         "latch": "cpp",
         "semaphore": "cpp",
         "syncstream": "cpp",
-        "hash_map": "cpp"
+        "hash_map": "cpp",
+        "queue": "cpp"
     },
     "python.testing.unittestArgs": [
         "-v",
