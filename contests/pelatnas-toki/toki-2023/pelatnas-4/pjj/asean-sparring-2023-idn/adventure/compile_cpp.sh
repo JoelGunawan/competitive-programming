@@ -1,0 +1,1 @@
+g++-12 -O2 -Wall -o "adventure" "grader.cpp" "adventure.cpp"

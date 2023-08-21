@@ -1,5 +1,2 @@
 #!/bin/bash
-
-problem=molecules
-
-g++-12 -o $problem grader.cpp $problem.cpp
+g++-12 -o molecules grader.cpp molecules.cpp
