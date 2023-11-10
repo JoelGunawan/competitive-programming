@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define A 1337
+#define B 31713
+#define C 711371
+
+int tmp = 0;
+int getRandomNumber() {
+	tmp = (A * tmp + B) % C;
+	return tmp;
+}
+
+void shuffleVector(vector<int>& vec) {
+	for (int i = 0; i < vec.size(); i++) {
+		int j = getRandomNumber() % (i + 1);
+		swap(vec[i],vec[j]); 
+	}
+}
+
+void makes(int n, int m) {
+	printf("\tprintf(\"%%d\",");
+	for (int i = 0; i < n; i++) printf("%c[", 'a' + getRandomNumber() % 13);
+	printf("%d", m);
+	for (int i = 0; i < n; i++) printf("]");
+	printf(");\n");
+}
+
+int main() {
+	printf("#include <bits/stdc++.h>\n");
+	printf("\n");
+	printf("using namespace std;\n");
+	printf("\n");
+	printf("int main() {\n");
+
+	vector <int> tmp;
+	for (int i = 0; i < 13; i++) tmp.push_back(i);
+	for (char c = 'a'; c <= 'm'; c++) {
+		printf("\tint %c[] = {", c);
+		shuffleVector(tmp);
+		for (int i = 0; i < 13; i++) printf("%d%s", tmp[i], (i < 12) ? "," : "};\n");
+	}
+	printf("\n");
+
+	makes(1, 7);
+	makes(5, 5);
+	makes(13, 8);
+	makes(52, 1);
+	makes(277, 10);
+	makes(700, 11);
+	makes(1412, 0);
+	makes(51940, 4);
+	makes(692501, 3);
+	makes(1208914, 6);
+	makes(2000000, 2);
+	makes(11313118, 12);
+	printf("\tprintf(\"\\n\");\n");
+	
+	printf("}\n");
+}
