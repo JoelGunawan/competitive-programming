@@ -35,6 +35,54 @@ int main() {
         // find largest of first, largest of second, largest of third, ...
         // find "upgrade" to the right that could work
         // order: by most that can be bought, than try swap lower for larger if can not buy
+        // find increasing subsequence from 0 kind of like stack algo
+        vector<int> v;
+        for(int i = 1; i <= n; ++i) {
+            while(v.size() && c[v.back()] >= c[i]) 
+                v.pop_back();
+            v.pb(i);
+        }
+        // coba upgrade ke yang lebih besar kalo bisa
+        vector<pair<int, int>> res = {mp(k / c[v[0]], v[0])};
+        if(res[0].fi == 0) {
+            for(int i = 1; i <= n; ++i)
+                cout << 0 << " ";
+            cout << endl;
+            continue;
+        }
+        k %= c[v[0]];
+        //cout << "INIT " << res[0].fi << " " << res[0].se << endl;
+        for(int i = 1; i < v.size(); ++i) {
+            int cur_cnt = 0;
+            int can = k / (c[v[i]] - c[res.back().se]);
+            //cout << can << endl;
+            if(can >= res.back().fi) {
+                k -= (c[v[i]] - c[res.back().se]) * res.back().fi;
+                cur_cnt += res.back().fi;
+                res.pop_back();
+            }
+            else {
+                int add = k / (c[v[i]] - c[res.back().se]);
+                cur_cnt += add;
+                k -= add * (c[v[i]] - c[res.back().se]);
+                res.back().fi -= add;
+                //cout << "TEST " << cur_cnt << " " << res.back().se << endl;
+            }
+            if(cur_cnt)
+                res.pb(mp(cur_cnt, v[i]));
+        }
+        int diff[n + 2];
+        memset(diff, 0, sizeof(diff));
+        for(auto i : res) {
+            diff[1] += i.fi;
+            diff[i.se + 1] -= i.fi;
+        }
+        int cur = 0;
+        for(int i = 1; i <= n; ++i) {
+            cur += diff[i];
+            cout << cur << " ";
+        }
+        cout << endl;
     }
     return 0;
 }
