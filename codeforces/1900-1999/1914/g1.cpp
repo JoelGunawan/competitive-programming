@@ -1,7 +1,5 @@
 // header file
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 // pragma
 #pragma GCC optimize("Ofast")
 #pragma GCC optimize("unroll-loops")
@@ -17,9 +15,6 @@
 #define fi first
 #define se second
 using namespace std;
-using namespace __gnu_pbds;
-typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_multiset;
-typedef tree<int, null_type, less<int>, rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 const int lim = 1e3 + 5;
 int mod = 998244353;
 struct disjoint_set {
@@ -52,6 +47,18 @@ ll sub(ll a, ll b) {
 ll add(ll a, ll b) {
     return (a + b) % mod;
 }
+ll mul(ll a, ll b) {
+    return (a * b) % mod;
+}
+ll powmod(ll a, ll b) {
+    if(b == 0)
+        return 1;
+    else {
+        ll tmp = powmod(a, b >> 1);
+        tmp = (tmp * tmp) % mod;
+        return b & 1 ? (tmp * a) % mod : tmp;
+    }
+}
 int main() {
     ios_base::sync_with_stdio(0); cin.tie(NULL);
     int t;
@@ -79,26 +86,52 @@ int main() {
                     dsu.merge(i, j);
             }
         }
-        if(dsu.fh(c[1]) == dsu.fh(c[2 * n])) {
-            cout << 1 << " ";
-            int cnt = 0;
-            for(int i = 1; i <= n; ++i) {
-                if(dsu.fh(i) == dsu.fh(c[1]))
-                    ++cnt;
-            }           
-            cout << 2 * cnt << endl;
+        //cout << "TEST" << endl;
+        //cout.flush();
+        // make n^2 dp
+        int ccl[n + 1], ccr[n + 1];
+        fill(ccl, ccl + n + 1, 1e9);
+        fill(ccr, ccr + n + 1, 0);
+        for(int i = 1; i <= n; ++i) {
+            ccl[dsu.fh(i)] = min(ccl[dsu.fh(i)], l[i]);
+            ccr[dsu.fh(i)] = max(ccr[dsu.fh(i)], r[i]);
         }
-        else {
-            cout << 2 << " ";
-            int left = 0, right = 0;
-            for(int i = 1; i <= n; ++i) {
-                if(dsu.fh(i) == dsu.fh(c[1]))
-                    ++left;
-                if(dsu.fh(i) == dsu.fh(c[2 * n]))
-                    ++right;
+        //cout << "HERE" << endl;
+        //cout.flush();
+        int maxpr[2 * n + 1], cc[2 * n + 1];
+        memset(maxpr, -1, sizeof(maxpr));
+        for(int i = 1; i <= n; ++i) {
+            if(dsu.fh(i) == i) {
+                //cout << ccl[i] << " " << ccr[i] << endl;
+                //cout.flush();
+                if(maxpr[ccr[i]] == -1 || maxpr[ccr[i]] > ccl[i])
+                    maxpr[ccr[i]] = ccl[i], cc[ccr[i]] = i;
             }
-            cout << 4ll * left * right << endl;
         }
+        //cout << "BEFORE DP INIT" << endl;
+        //cout.flush();
+        int dp[2 * n + 1];
+        fill(dp, dp + 2 * n + 1, 1e9);
+        dp[0] = 0;
+        //cout << "BEFORE DP" << endl;
+        //cout.flush();
+        for(int i = 1; i <= 2 * n; ++i) {
+            if(maxpr[i] != -1)
+                dp[i] = min(dp[i], dp[maxpr[i] - 1] + 1);
+        }
+        vector<int> used;
+        int cur = 2 * n;
+        while(cur > 0) {
+            used.pb(cc[cur]);
+            cur = maxpr[cur] - 1;
+        }
+        ll res = 1;
+        for(auto i : used) {
+            //cout << "DEBUG " << i << " " << dsu.sz[dsu.fh(i)] << endl;
+            res = mul(res, mul(2, dsu.sz[dsu.fh(i)]));
+        }
+        cout << dp[2 * n] << " " << res << endl;
+        //cout.flush();
     }
     return 0;
 }
