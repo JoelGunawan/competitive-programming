@@ -8,6 +8,7 @@ int main() {
     //cout << "!" << endl;
     // tipe data "primitif" (built in ke bahasa c++)
     // variable -> menyimpan nilai
+    // bool (boolean) -> true/false. 0 -> false, selain 0 -> true
     // short -> integer -2^15...2^15-1 -32768...32767 (perf. mirip int, jadi gaperna dipake) memory pake 1/2 dari memory int, gaperna dipake)
     // int -> integer -2^31...2^31-1  -2e9...2e9 (perf. masih cepet, paling sering dipake) 
     // long long -> integer -2^63...2^63-1 -9e18...9e18 (perf. agak lebih lambat, tapi ga separah long double, kalo mau pake long" terus boleh)
