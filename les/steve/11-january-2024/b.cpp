@@ -13,7 +13,8 @@ int sum(int n) {
     cout << x << endl;
     return x;
 }
-
+// Note: jangan pake array sbg parameter
+// klo butuh sbg param pake vector<> aja
 int max(int x, int y) {
     if(x > y) {
         return x;
