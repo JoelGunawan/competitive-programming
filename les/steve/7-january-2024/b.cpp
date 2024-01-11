@@ -13,6 +13,10 @@ int main() {
     // int n;
     // cin >> n;
     // int a[n];
+    // a[0] (variable sendiri)
+    // a[0] = 1
+    // cout << a[0]
+    // floor(a[0])
     // for(int i = 0; i < n; ++i)
     //     cin >> a[i];
     // int sum = 0;
@@ -24,7 +28,7 @@ int main() {
     // }
     // cout << endl;
     // int b[] = {72, 20351, 5123958, 9182, 283};
-    // int c[n][n];
+    // int c[3][3];
     // // c[0][0] c[0][1] c[0][2]
     // // c[1][0] c[1][1] c[1][2]
     // // c[2][0] c[2][1] c[2][2]
