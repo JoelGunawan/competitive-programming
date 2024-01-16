@@ -14,10 +14,6 @@
 #define fi first
 #define se second
 using namespace std;
-#include <bits/stdc++.h>
-using namespace std;
-#include <bits/stdc++.h>
-using namespace std;
 const int lim = 1 << 18;
 struct lazy_segment_tree {
     long long a[2 * lim], lazy[2 * lim], m_lazy[2 * lim], m[2 * lim], inf = 1e18;
