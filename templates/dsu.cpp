@@ -1,9 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 const int lim = 2e5 + 5;
-struct dsu {
+struct disjoint_set {
     int head[lim], size[lim];
-    dsu() {
+    disjoint_set() {
         memset(head, -1, sizeof(head));
         fill(size, size + lim, 1);
     }
@@ -33,7 +33,7 @@ int main() {
         cin >> u >> v >> w;
         a[i] = make_pair(w, make_pair(u, v));
     }
-    dsu dsu1;
+    disjoint_set dsu1;
     sort(a + 1, a + m + 1);
     int res = 0;
     for(int i = 1; i <= m; ++i) {

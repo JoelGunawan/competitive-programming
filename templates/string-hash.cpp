@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int lim = 1e6 + 5,  mod_sz = 2, key = 998244353;
-int mod[2] = {(int)1e9 + 7, (int)1e9 + 9};
-long long power[mod_sz][lim];
 struct string_hash {
+    int lim, mod_sz, key;
+    long long power[mod_sz][lim];
     vector<int> val[mod_sz];
+    vector<int> mod;
     string str;
-    void build() {
+    void build(int Lim, int Mod_sz, int Key, vector<int> Mod) {
+        lim = Lim, mod_sz = Mod_sz, key = Key, mod = Mod;
         long long tmp[mod_sz];
         memset(tmp, 0, sizeof(tmp));
         for(int i = 0; i < str.size(); ++i) {
