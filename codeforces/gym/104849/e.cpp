@@ -28,27 +28,31 @@ struct chash {
     static unsigned hash_combine(unsigned a, unsigned b) { return a * 31 + b; }
     int operator()(int x) const { return hash_f(x)^RANDOM; }
 };
-const int lim = 2e6 + 10;
-gp_hash_table<ll, int, chash> a;
+const int lim = 1e6 + 5;
 struct fenwick {
-  int num;
+  vector<pair<int, int>> points;
+  int a[lim];
+  fenwick() {
+    memset(a, 0, sizeof(a));
+  }
   void update(int idx, int val) {
-    idx += 1e6 + 5;
     while(idx < lim) {
-      a[1ll * num * (ll)(2e6 + 10) + idx] += val;
-      if(a[1ll * num * (ll)(2e6 + 10) + idx] >= mod)
-        a[1ll * num * (ll)(2e6 + 10) + idx] -= mod;
-      else if(a[1ll * num * (ll)(2e6 + 10) + idx] <= -mod)
-        a[1ll * num * (ll)(2e6 + 10) + idx] += mod;
+      a[idx] += val;
+      if(a[idx] >= mod)
+        a[idx] -= mod;
+      else if(a[idx] <= -mod)
+        a[idx] += mod;
       idx += idx&-idx;
     }
   }
+  void update(pair<int, int> a, int val) {
+    int idx = lb(points.begin(), points.end(), a) - points.begin();
+    update(idx + 1, val);
+  }
   int query(int idx) {
-    idx += 1e6 + 5;
     int ret = 0;
     while(idx > 0) {
-      if(a.find(1ll * num * (ll)(2e6 + 10) + idx) != a.end())
-        ret += a[1ll * num * (ll)(2e6 + 10) + idx];
+      ret += a[idx];
       if(ret >= mod)
         ret -= mod;
       else if(ret <= -mod)
@@ -58,9 +62,17 @@ struct fenwick {
     return ret;
   }
   int query(int l, int r) {
-    if(l > r)
-      return 0;
     return query(r) - query(l - 1);
+  }
+  int query(int x, int d, int u) {
+    // for given x
+    int idxr = ub(points.begin(), points.end(), mp(x, u)) - points.begin() - 1;
+    int idxl = lb(points.begin(), points.end(), mp(x, d)) - points.begin();
+    ++idxr, ++idxl;
+    if(idxr < idxl)
+      return 0;
+    else
+      return query(idxl, idxr);
   }
 };
 int main() {
@@ -83,31 +95,32 @@ int main() {
   int dp[n + 1];
   memset(dp, 0, sizeof(dp));
   dp[0] = 1;
-  gp_hash_table<int, int, chash> pr[3][3];
-  pr[0][1][0] = 1;
-  pr[0][2][0] = 2;
-  pr[1][2][0] = 3;
   int last = 3;
-  fenwick bit[n + 5];
-  for(int i = 0; i < n + 5; ++i)
-    bit[i].num = i;
-  bit[1].update(0, 1);
-  bit[2].update(0, 1);
-  bit[3].update(0, 1);
+  // cerr << "TEST" << endl;
+  // cerr.flush();
+  fenwick bit[3];
   // map of pr indicates the previous ones
   // for every difference, memo the indices and do the transitions like that, reset the bit
   // can not do (because it affects each other)
+  vector<pair<int, int>> p[3];
+  for(int i = 0; i <= n; ++i) {
+    p[0].pb(mp(pref[i][1] - pref[i][0], pref[i][2] - pref[i][0]));
+    p[1].pb(mp(pref[i][2] - pref[i][0], pref[i][1] - pref[i][0]));
+    p[2].pb(mp(pref[i][2] - pref[i][1], pref[i][0] - pref[i][2]));
+  }
+  for(int i = 0; i < 3; ++i) {
+    sort(p[i].begin(), p[i].end());
+    p[i].resize(unique(p[i].begin(), p[i].end()) - p[i].begin());
+    bit[i].points = p[i];
+  }
+  bit[0].update(mp(0, 0), 1);
+  bit[1].update(mp(0, 0), 1);
+  bit[2].update(mp(0, 0), 1);
   for(int i = 1; i <= n; ++i) {
-    dp[i] = (dp[i] + (ll)bit[pr[0][1][pref[i][1] - pref[i][0]]].query(-1e6, pref[i][2] - pref[i][0] - 1) + bit[pr[0][2][pref[i][2] - pref[i][0]]].query(-1e6, pref[i][1] - pref[i][0] - 1) + bit[pr[1][2][pref[i][2] - pref[i][1]]].query(-1e6, pref[i][0] - pref[i][2] - 1)) % mod;
-    if(pr[0][1][pref[i][1] - pref[i][0]] == 0)
-      pr[0][1][pref[i][1] - pref[i][0]] = ++last;
-    if(pr[0][2][pref[i][2] - pref[i][0]] == 0)
-      pr[0][2][pref[i][2] - pref[i][0]] = ++last;
-    if(pr[1][2][pref[i][2] - pref[i][1]] == 0)
-      pr[1][2][pref[i][2] - pref[i][1]] = ++last;
-    bit[pr[0][1][pref[i][1] - pref[i][0]]].update(pref[i][2] - pref[i][0], dp[i]);
-    bit[pr[0][2][pref[i][2] - pref[i][0]]].update(pref[i][1] - pref[i][0], dp[i]);
-    bit[pr[1][2][pref[i][2] - pref[i][1]]].update(pref[i][0] - pref[i][2], dp[i]);
+    dp[i] = (dp[i] + (ll)bit[0].query(pref[i][1] - pref[i][0], -1e6, pref[i][2] - pref[i][0] - 1) + bit[1].query(pref[i][2] - pref[i][0], -1e6, pref[i][1] - pref[i][0] - 1) + bit[2].query(pref[i][2] - pref[i][1], -1e6, pref[i][0] - pref[i][2] - 1)) % mod;
+    bit[0].update(mp(pref[i][1] - pref[i][0], pref[i][2] - pref[i][0]), dp[i]);
+    bit[1].update(mp(pref[i][2] - pref[i][0], pref[i][1] - pref[i][0]), dp[i]);
+    bit[2].update(mp(pref[i][2] - pref[i][1], pref[i][0] - pref[i][2]), dp[i]);
     // cout << dp[i] << " ";
   }
   if(dp[n] < 0)
