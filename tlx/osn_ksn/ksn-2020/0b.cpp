@@ -13,17 +13,23 @@ vector<ll> solve(ll n)
 }
 int main()
 {
+    // ifstream -> cin
+    // ofstream -> cout
     ifstream fin; ofstream fout;
     for(int i = 1; i <= 10; ++i)
     {
+        // fin.open(directory_file)
         fin.open("./inputs/empat_" + to_string(i) + ".in");
         ll n;
         fin >> n;
+        // fin.close()
         fin.close();
         vector<ll> a = solve(n);
+        // fout.open(directory_file)
         fout.open("./outputs/empat_" + to_string(i) + ".out");
         for(int i = 0; i < 4; ++i)
             fout << a[i] << " ";
+        // fout.close()
         fout.close();
     }
     return 0;
