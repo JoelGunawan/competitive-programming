@@ -1,0 +1,55 @@
+@media (min-width: 768px) and (max-width: 991px) {
+  .container {
+      width: 100%;
+  }
+}
+
+.page-header {
+  margin-top: 0;
+}
+
+.alert {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#last-update-info {
+  float: right;
+}
+
+.progress {
+  height: 10px;
+  margin-bottom: 10px;
+}
+
+.col-rank {
+  width: 30px;
+}
+
+.col-username {
+  font-size: 8px;
+}
+
+.col-school {
+  width: 230px;
+}
+
+.col-province {
+  width: 155px;
+}
+
+.col-score {
+  width: 55px;
+}
+
+.medal-gold {
+  background-color: #ffff00;
+}
+
+.medal-silver {
+  background-color: #b7b7b7;
+}
+
+.medal-bronze {
+  background-color: #e69138;
+}

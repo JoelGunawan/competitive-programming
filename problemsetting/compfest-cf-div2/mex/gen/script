@@ -1,0 +1,8 @@
+random_gen -test-count 50000 -sum-n 200000 -min-a -1000000000 -max-a 10000 -min-x 1 -max-x 5 > $
+random_gen -test-count 100 -sum-n 200000 -min-a -1000000000 -max-a 100000 -min-x 1 -max-x 10000 > $
+random_gen -test-count 2 -sum-n 200000 -min-a -1000000000 -max-a 100000 -min-x 1 -max-x 100 > $
+random_gen -test-count 2 -sum-n 200000 -min-a -1000000000 -max-a 10000000 -min-x 100 -max-x 100000 > $
+random_gen -test-count 2 -sum-n 200000 -min-a -1000000000 -max-a 1000000000 -min-x 100000 -max-x 1000000000 > $
+random_gen -test-count 1 -sum-n 200000 -min-a -1000000000 -max-a 10000000 -min-x 1 -max-x 100 > $
+random_gen -test-count 1 -sum-n 200000 -min-a -1000000000 -max-a 10000000 -min-x 100 -max-x 100000 > $
+permutation_gen -test-count 5 -sum-n 200000 -min-x 1 -max-x 1000000000 > $

@@ -160,7 +160,8 @@
         "expected": "cpp",
         "spanstream": "cpp",
         "stacktrace": "cpp",
-        "stdfloat": "cpp"
+        "stdfloat": "cpp",
+        "filesystem": "cpp"
     },
     "python.testing.unittestArgs": [
         "-v",
