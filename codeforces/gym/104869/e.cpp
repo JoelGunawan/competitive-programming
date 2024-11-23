@@ -10,63 +10,46 @@ int main() {
   ios_base::sync_with_stdio(0); cin.tie(0);
   int x, y, p, q;
   cin >> x >> y >> p >> q;
-  // fi -> sheep
-  // se -> wolves
-  pair<int, int> left = mp(x, y), right = mp(0, 0);
-  pair<int, int> boat = mp(0, 0);
-  int res = 0;
-  // first can be all wolves, sometimes this is more optimal?
-  // dp state of left and dp state of right with count of moves?
-  while(left.fi != 0) {
-    bool move = 0;
-    // cout << "LEFT " << left.fi << " " << left.se << endl;
-    for(int i = min(p, left.fi); i >= 0; --i) {
-      // cout << "TRY " << i << " " << left.fi - i + q << " " << left.se - (p - i) << endl;
-      if(left.fi - i + q >= left.se - max(0, p - i) || i == left.fi) {
-        boat.fi += i;
-        left.fi -= i;
-        boat.se += min(left.se, max(0, p - i));
-        left.se -= min(left.se, max(0, p - i));
-        move = 1;
-        break;
+  // find first state such that dist[x][w][1] is minimal
+  int dist[x + 1][y + 1][2];
+  memset(dist, -1, sizeof(dist));
+  queue<pair<int, pair<int, pair<int, int>>>> bfs;
+  bfs.push(mp(0, mp(0, mp(0, 0))));
+  while(bfs.size()) {
+    int d = bfs.front().fi, s = bfs.front().se.fi, w = bfs.front().se.se.fi, side = bfs.front().se.se.se;
+    bfs.pop();
+    // cerr << s << " " << w << " " << side << endl;
+    if(dist[s][w][side] != -1)
+      continue;
+    dist[s][w][side] = d;
+    // for every single movement possible: try it using bfs
+    if(side == 0) {
+      // move ms and mw such that if moved is x, y then ms - x + q >= mw - y OR ms - i = 0
+      int ms = x - s, mw = y - w;
+      // cerr << x << " " << s << " " << ms << " " << mw << endl;
+      for(int i = 0; i <= ms; ++i) {
+        for(int j = 0; j <= mw; ++j) {
+          // cerr << i << " " << j << " " << ms - i + q << " " << mw -j << endl;
+          if(dist[s + i][w + j][!side] == -1 && i + j <= p && (ms - i + q >= mw - j || ms - i == 0))
+            bfs.push(mp(d + 1, mp(s + i, mp(w + j, !side))));
+        }
       }
     }
-    assert(left.fi >= 0 && left.se >= 0 && boat.fi >= 0 && boat.se >= 0 && right.fi >= 0 && right.se >= 0);
-    // cout << "MOVING " << boat.fi << " " << boat.se << endl;
-    if(!move) {
-      cout << -1 << endl;
-      exit(0);
-    }
-    else
-      ++res;
-    if(left.fi == 0) {
-      cout << res << endl;
-      exit(0);
-    }
-    right.se += boat.se;
-    right.fi += boat.fi;
-    boat.se = 0;
-    boat.fi = 0;
-    // leave max amount of wolves possible
-    // cout << "RIGHT " << right.fi << " " << right.se << endl;
-    assert(left.fi >= 0 && left.se >= 0 && boat.fi >= 0 && boat.se >= 0 && right.fi >= 0 && right.se >= 0);
-    move = 0;
-    for(int i = 0; i <= min(p, right.se); ++i) {
-      if(right.fi + q >= right.se - i || right.fi == 0) {
-        right.se -= i;
-        boat.se += i;
-        move = 1;
-        break;
+    else {
+      // move s and w such that if moved is i, j then s - i + q >= w - j OR s = 0
+      for(int i = 0; i <= s; ++i) {
+        for(int j = 0; j <= w; ++j) {
+          if(dist[s - i][w - j][!side] == -1 && i + j <= p && (s - i + q >= w - j || s == 0))
+            bfs.push(mp(d + 1, mp(s - i, mp(w - j, !side))));
+        }
       }
     }
-    assert(left.fi >= 0 && left.se >= 0 && boat.fi >= 0 && boat.se >= 0 && right.fi >= 0 && right.se >= 0);
-    if(!move) {
-      cout << -1 << endl;
-      exit(0);
-    }
-    ++res;
-    left.se += boat.se;
-    boat.se = 0;
-    assert(left.fi >= 0 && left.se >= 0 && boat.fi >= 0 && boat.se >= 0 && right.fi >= 0 && right.se >= 0);
   }
+  const int inf = 1e9;
+  int res = inf;
+  for(int i = 0; i <= y; ++i) {
+    if(dist[x][i][1] != -1)
+      res = min(res, dist[x][i][1]);
+  }
+  cout << (res == inf ? -1 : res) << endl;
 }
