@@ -95,7 +95,7 @@ void tc() {
     // cerr << i << " " << ans << " " << a[i].fi << " " << yans << endl;
     res = max(res, mp(ans, mp(a[i].fi, yans)));
   }
-  cout << res.fi << endl << xc[res.se.fi - 1] + 1 << " " << yc[res.se.se - 1] + 1 << endl;
+  cout << res.fi << endl << min(xc[res.se.fi - 1] + 1, (int)1e9) << " " << min(yc[res.se.se - 1] + 1, (int)1e9) << endl;
 }
 int main() {
   ios_base::sync_with_stdio(0); cin.tie(NULL);
