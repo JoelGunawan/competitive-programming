@@ -17,18 +17,18 @@ using namespace std;
 using namespace __gnu_pbds;
 typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_multiset;
 typedef tree<int, null_type, less<int>, rb_tree_tag,tree_order_statistics_node_update> ordered_set;
-double posx, posy, movx, movy;
+long double posx, posy, movx, movy;
 int t1, t2, t3, t4;
-double l, r, u, d;
+long double l, r, u, d;
 int main() {
   ios_base::sync_with_stdio(0); cin.tie(NULL);
   int n;
   cin >> n;
   // given boundaries, binary search time of arrival and departure.
   // how to binary search?
-  double earliest = 0, latest = 1e100;
+  long double earliest = 0, latest = 1e100;
   cin >> l >> d >> r >> u;
-  double eps = 1e-10 / 2;
+  long double eps = 1e-12;
   cout << setprecision(15);
   for(int i = 1; i <= n; ++i) {
     // binary search the time when they will intersect
@@ -48,10 +48,10 @@ int main() {
       // just do normal stuff
       // need to check whether to move forwards/backwards
       bool dne = 0;
-      double cl = 0, cr = 1e5 / max({1.0, movx, movy}), e = 1e18, la = 0;
+      long double cl = 0, cr = 1e5 / max({(long double)1.0, movx, movy}), e = 1e18, la = 0;
       while(cr - cl > eps) {
-        double mid = (cl + cr) / 2;
-        double curx = posx + movx * mid, cury = posy + movy * mid;
+        long double mid = (cl + cr) / 2;
+        long double curx = posx + movx * mid, cury = posy + movy * mid;
         // cerr << i << " " << mid << " " << curx << " " << cury << endl;
         if(curx - eps < l || curx + eps > r) {
           if(movx == 0)
@@ -81,10 +81,10 @@ int main() {
         cout << -1 << endl;
         return 0;
       }
-      cl = 0, cr = 1e5 / max({1.0, movx, movy});
+      cl = 0, cr = 1e5 / max({(long double)1.0, movx, movy});
       while(cr - cl > eps) {
-        double mid = (cl + cr) / 2;
-        double curx = posx + movx * mid, cury = posy + movy * mid;
+        long double mid = (cl + cr) / 2;
+        long double curx = posx + movx * mid, cury = posy + movy * mid;
         if(curx - eps < l || curx + eps > r) {
           if(movx == 0)
             dne = 1;
