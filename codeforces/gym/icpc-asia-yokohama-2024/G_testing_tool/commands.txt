@@ -1,0 +1,3 @@
+g++-14 g.cpp -o main 
+g++-14 gen.cpp -o gen && ./gen > 2.in
+bash run.bash 2.in ./main
