@@ -1,0 +1,5 @@
+Case 1: equivalent solutions
+Case 2: inconsistent solutions
+Case 3: no solution
+Case 4: inconsistent solutions
+Case 5: equivalent solutions
