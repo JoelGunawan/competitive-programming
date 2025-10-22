@@ -1,0 +1,6 @@
+#!/bin/bash
+
+task="migrations"
+grader_name="grader"
+
+g++-14 -std=gnu++20 -Wall -O2 -pipe -o "${task}" "${grader_name}.cpp" "${task}.cpp"
